@@ -1,0 +1,29 @@
+{
+  "name": "search-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/api/server.ts",
+    "build": "tsc",
+    "start": "node dist/api/server.js",
+    "crawl": "ts-node scripts/crawl.ts",
+    "index": "ts-node scripts/buildIndex.ts",
+    "search": "ts-node scripts/runSearch.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.5.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "cheerio": "^1.2.0",
+    "express": "^5.2.1"
+  }
+}
