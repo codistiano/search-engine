@@ -8,7 +8,7 @@ class DoublyNode<T>{
   }
 }
 
-class Queue {
+export class Queue {
   private head: DoublyNode<T> | null = null;
   private tail: DoublyNode<T> | null = null;
   private size: number = 0;
@@ -19,7 +19,7 @@ class Queue {
 
     if (!this.head) {
       this.head = this.tail = newLink;
-      increaseSize();
+      this.increaseSize();
       return;
     }
 
@@ -27,7 +27,7 @@ class Queue {
       this.tail.next = newLink;
       newLink.prev = this.tail;
       this.tail = newLink;
-      increaseSize();
+      this.increaseSize();
       return;
     }
   }
@@ -44,7 +44,7 @@ class Queue {
       this.head.next = null;
       this.head = headNext;
       this.head.prev = null;
-      decreaseSize();
+      this.decreaseSize();
       return
     }
   }
@@ -53,7 +53,7 @@ class Queue {
     if (!this.head || !this.tail) {
       return 1;
     } else {
-      return 0
+      return 0;
     }
   }
 
@@ -70,4 +70,5 @@ class Queue {
   size(): number {
     return this.size;
   }
-}
+};
+
