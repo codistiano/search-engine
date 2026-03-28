@@ -3,7 +3,7 @@ class DoublyNode<T>{
   next: DoublyNode<T> | null;
   prev: DoublyNode<T> | null;
   
-  constructor (value: string) {
+  constructor (value: T) {
     this.value = value;
   }
 }
@@ -33,7 +33,7 @@ export class Queue {
   };
 
   // Shifting / Removing the first element in the queue
-  dequeue() {
+  dequeue(): T | undefined {
     if (this.head === this.tail) {
       this.head = this.tail = null;
       this.decreaseSize();
@@ -46,11 +46,11 @@ export class Queue {
       this.head = headNext;
       this.head.prev = null;
       this.decreaseSize();
-      return
+      return;
     };
   };
 
-  isEmpty(): number {
+  isEmpty(): boolean {
     if (!this.head || !this.tail) {
       return true;
     } else {

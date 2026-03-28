@@ -1,28 +1,35 @@
-import { describe, expect, test } from 'vitest';
+import { describe, beforeAll, expect, test } from 'vitest';
 import {Queue} from "../../src/crawler/queue.ts";
 
-const objs = new Queue<string>();
-
 describe('queue', () => {
-  test('Enqueue', () => {
-    objs.enqueue("check 1");
-    objs.enqueue("check 2");
+  let objs: Queue<string>;
 
-    expect(objs.size).toEqual(2);
+  beforeAll(() => {
+    objs = new Queue<string>();
+  });
+  
+  test('Enqueue 5 items', () => {
+    objs.enqueue("Check 1");
+    objs.enqueue("Check 2");
+    objs.enqueue("Check 3");
+    objs.enqueue("Check 4");
+    objs.enqueue("Check 5");
+
+    expect(objs.size).toBe(5)
   });
 
-  test('Dequeue', () => {
+  test('Dequeue some items', () => {
     objs.dequeue();
     objs.dequeue();
-    
-    expect(objs.size).toEqual(0);
-  });
+    objs.dequeue();
+    objs.dequeue();
 
-  test('Mentioning Size', () => {
-    expect(objs.size).toEqual(0);
+    expect(objs.size).toBe(1);
   });
+  
+  test('Dequeuing and checking emptiness', () => {
+    objs.dequeue();
 
-  test('Confirming Element availability', () => {
     expect(objs.isEmpty()).toBe(true);
   });
 });
