@@ -1,4 +1,9 @@
-import robotsParser from "robots-parser";
+import robotsParserImport = require("robots-parser");
+
+const robotsParser = robotsParserImport as unknown as (
+  url: string,
+  content: string,
+) => any;
 
 type Robots = ReturnType<typeof robotsParser>;
 
@@ -12,38 +17,37 @@ export class RobotsTxt {
     try {
       urlObj = new URL(targetUrl);
     } catch {
-      // Invalid URL → skip safely
       return false;
     }
 
     const host = urlObj.host;
     const robotsUrl = `${urlObj.protocol}//${host}/robots.txt`;
 
-    // Fetch only if not cached
     if (!this.cache.has(host)) {
       await this.fetchAndCache(robotsUrl, host);
     }
 
     const rules = this.cache.get(host);
 
-    // If no rules (fetch failed or no robots.txt) → allow
     if (!rules) return true;
 
     return rules.isAllowed(targetUrl, this.userAgent);
   }
 
-  private async fetchAndCache(
-    robotsUrl: string,
-    host: string
-  ): Promise<void> {
+  private async fetchAndCache(robotsUrl: string, host: string): Promise<void> {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+
     try {
       const response = await fetch(robotsUrl, {
+        signal: controller.signal,
         headers: {
           "User-Agent": this.userAgent,
         },
       });
 
-      // If robots.txt doesn't exist → allow everything
+      clearTimeout(timeout);
+
       if (!response.ok) {
         this.cache.set(host, null);
         return;
@@ -54,7 +58,6 @@ export class RobotsTxt {
 
       this.cache.set(host, parser);
     } catch {
-      // Network error → assume allowed
       this.cache.set(host, null);
     }
   }
