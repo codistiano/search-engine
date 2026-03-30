@@ -1,27 +1,29 @@
-class DoublyNode<T>{
+class DoublyNode<T> {
   value: T;
   next: DoublyNode<T> | null;
   prev: DoublyNode<T> | null;
-  
-  constructor (value: T) {
+
+  constructor(value: T) {
+    this.next = null;
+    this.prev = null;
     this.value = value;
   }
 }
 
-export class Queue {
+export class Queue<T> {
   private head: DoublyNode<T> | null = null;
   private tail: DoublyNode<T> | null = null;
-  private size: number = 0;
+  size: number = 0;
 
   // Appending to the end of the queue
-  enqueue(link: string): void {
+  enqueue(link: T): void {
     const newLink = new DoublyNode(link);
 
     if (!this.head) {
       this.head = this.tail = newLink;
       this.increaseSize();
       return;
-    };
+    }
 
     if (this.tail) {
       this.tail.next = newLink;
@@ -29,47 +31,43 @@ export class Queue {
       this.tail = newLink;
       this.increaseSize();
       return;
-    };
-  };
+    }
+  }
 
   // Shifting / Removing the first element in the queue
   dequeue(): T | undefined {
+    if (!this.head) return undefined;
+
+    const removedValue = this.head.value;
+
     if (this.head === this.tail) {
       this.head = this.tail = null;
-      this.decreaseSize();
-      return;
-    };
+    } else {
+      this.head = this.head.next;
+      if (this.head) {
+        this.head.prev = null;
+      }
+    }
 
-    if (this.head) {
-      const headNext = this.head.next;
-      this.head.next = null;
-      this.head = headNext;
-      this.head.prev = null;
-      this.decreaseSize();
-      return;
-    };
-  };
+    this.decreaseSize();
+    return removedValue;
+  }
 
   isEmpty(): boolean {
     if (!this.head || !this.tail) {
       return true;
     } else {
       return false;
-    };
-  };
+    }
+  }
 
-  increaseSize(): void{
+  private increaseSize(): void {
     this.size += 1;
     return;
-  };
+  }
 
-  decreaseSize(): void{
+  private decreaseSize(): void {
     this.size -= 1;
     return;
-  };
-
-  size(): number {
-    return this.size;
-  };
-};
-
+  }
+}
