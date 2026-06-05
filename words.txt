@@ -1,0 +1,5 @@
+This is the words file just to test go if it can recognize and read this file or not. Thank you for your cooperation for the success of our project.
+the the the the 
+is is is is is is is is is is is
+hello hello hello hello hello hello hello hello hello hello hello hello hello
+working working working working working working
