@@ -3,10 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"path"
 	"sort"
-
-	// "slices"
-	// "sort"
 	"strings"
 )
 
@@ -16,7 +14,8 @@ type dict struct {
 }
 
 func mapper(file string, tupleDict []dict) []dict {
-	result, err := os.ReadFile(file)
+	fullPath := path.Join("./seed_text/", file)
+	result, err := os.ReadFile(fullPath)
 
 	if err != nil {
 		fmt.Print("Error: File not found!")
@@ -28,7 +27,12 @@ func mapper(file string, tupleDict []dict) []dict {
 	counterMap := make(map[string]int)
 
 	for _, word := range content {
+		word := strings.ToLower(strings.Trim(word, ".,!?;:\"'()[]"))
+		if word == "" {
+		    continue
+		}
 		counterMap[word] += 1
+		wordsIndex.BuildIndex(file, word)
 	}
 
 	for k, v := range counterMap {
@@ -39,7 +43,8 @@ func mapper(file string, tupleDict []dict) []dict {
 }
 
 func main() {
-	files, err := os.ReadDir("./")
+	txtFolderPath := "./seed_text/"
+	files, err := os.ReadDir(txtFolderPath)
 
 	if err != nil {
 		fmt.Println("Error: no files were found!")
@@ -64,7 +69,8 @@ func main() {
 		return dictTuple[i].freq > dictTuple[j].freq
 	})
 
-	fmt.Println(dictTuple)
+	// fmt.Println(dictTuple[:10])
+	fmt.Println(wordsIndex.Search("electric"))
 
 	fmt.Println("Hello! from Search Engine!")
 }
