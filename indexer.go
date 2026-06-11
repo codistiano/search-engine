@@ -1,8 +1,22 @@
 package main
 
-import "slices"
+import (
+	"fmt"
+	"slices"
+)
 
 type Index map[string][]string
+
+type NotFoundError struct {
+	word string
+}
+
+func (notFoundError NotFoundError) Error() string {
+	return fmt.Sprintf(
+		"'%s' keyword not found!",
+		notFoundError.word,
+	)
+}
 
 var wordsIndex = Index{}
 
@@ -14,6 +28,11 @@ func(i Index) BuildIndex(src, word string) {
 	}
 }
 
-func(i Index) Search(word string) []string {
-	return i[word]
+func(i Index) Search(word string) ([]string, error) {
+
+	if len(i[word]) == 0 {
+		return nil, NotFoundError{word: word}
+	}
+	
+	return i[word], nil
 }

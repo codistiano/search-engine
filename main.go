@@ -13,13 +13,12 @@ type dict struct {
 	freq int
 }
 
-func mapper(file string, tupleDict []dict) []dict {
+func mapper(file string, tupleDict []dict) ([]dict, error) {
 	fullPath := path.Join("./seed_text/", file)
 	result, err := os.ReadFile(fullPath)
 
 	if err != nil {
-		fmt.Print("Error: File not found!")
-		return []dict{}
+		return []dict{}, err
 	}
 
 	content := strings.Fields(string(result))
@@ -29,7 +28,7 @@ func mapper(file string, tupleDict []dict) []dict {
 	for _, word := range content {
 		word := strings.ToLower(strings.Trim(word, ".,!?;:\"'()[]"))
 		if word == "" {
-		    continue
+			continue
 		}
 		counterMap[word] += 1
 		wordsIndex.BuildIndex(file, word)
@@ -39,7 +38,7 @@ func mapper(file string, tupleDict []dict) []dict {
 		tupleDict = append(tupleDict, dict{k, v})
 	}
 
-	return tupleDict
+	return tupleDict, nil
 }
 
 func main() {
@@ -62,7 +61,13 @@ func main() {
 	var dictTuple []dict
 
 	for _, file := range txtFiles {
-		dictTuple = mapper(file, dictTuple)
+		output, err := mapper(file, dictTuple)
+
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		dictTuple = append(dictTuple, output...)
 	}
 
 	sort.Slice(dictTuple, func(i, j int) bool {
@@ -70,7 +75,13 @@ func main() {
 	})
 
 	// fmt.Println(dictTuple[:10])
-	fmt.Println(wordsIndex.Search("electric"))
+
+	result, err := wordsIndex.Search("nothingelse")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(result)
+	}
 
 	fmt.Println("Hello! from Search Engine!")
 }
